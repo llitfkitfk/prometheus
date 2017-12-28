@@ -11,7 +11,15 @@ networks:
   back-tier:
 
 services:
-
+  source:
+    image: containerize/git
+    environment: 
+      - REPO_LOCAL=/data/repos/prometheus
+      - REPO_REMOTE=https://github.com/vegasbrianc/prometheus.git
+    tty: true
+    volumes: 
+      - prometheus_config_data:/data/git/repos/prometheus/prometheus
+      - alertmanager_config_data:/data/git/repos/prometheus/alertmanager
   prometheus:
     image: prom/prometheus:v2.0.0
     volumes:
@@ -86,15 +94,6 @@ services:
     restart: always
     deploy:
       mode: global
-  source:
-    image: containerize/git
-    environment: 
-      - REPO_LOCAL=/data/repos/prometheus
-      - REPO_REMOTE=https://github.com/vegasbrianc/prometheus.git
-    tty: true
-    volumes: 
-      - prometheus_config_data:/data/git/repos/prometheus/prometheus
-      - alertmanager_config_data:/data/git/repos/prometheus/alertmanager
   grafana:
     image: grafana/grafana
     depends_on:
